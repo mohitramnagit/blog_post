@@ -1,37 +1,32 @@
 from flask import render_template,request,redirect,url_for
-from models import db, Blog_Post
+from models import db, BlogPost
 from datetime import datetime
 
-
+# writing a function for the home page which will have a list of all the blogs
 def home():
-    posts = Blog_Post.query.all()
+    posts = BlogPost.query.all()
     return render_template('home.html', posts=posts)
 
-# def create_post():
-#     if request.method == 'POST':
-#         title = request.form.get('title')
-#         content = request.form.get('content')
-#         post = Post(title=title, content=content, date_posted=datetime.utcnow())
-#         db.session.add(post)
-#         db.session.commit()
-#         return redirect(url_for('home'))
-#     return render_template('create_post.html')
+#writing a function for a blog which has been linked to home page using post_name and shows the content of the blog
+def post(post_title):
+    post = BlogPost.query.filter_by(title=post_title).one()
+    return render_template('post.html', post=post)
 
-# # writing a function to delete a post and printing a message success or failure and redirecting to home page
-# def delete_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     db.session.delete(post)
-#     db.session.commit()
-#     return redirect(url_for('home'))
+#writing a function which will take input from a create.html page and write it to the database
 
-# # writing a function to update a post and printing a message success or failure and redirecting to home page
-# def update_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-    
-#     if request.method == 'POST':
-#         post.title = request.form.get('title')
-#         post.content = request.form.get('content')
-#         db.session.commit()
-#         return redirect(url_for('home'))
-#     return render_template('update_post.html', post=post)
+def create_post():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        time=datetime.now()
+        post = BlogPost(title=title, content=content, date_posted=time)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('create_post.html')
+
+# writing a function for the about page which will have a list of all the blogs
+def about():
+    return render_template('about.html')
+
 
