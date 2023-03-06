@@ -1,9 +1,11 @@
 # creating a basic flask app regarding the personal blogs
 
 # creating basic functionality first which include a home page and about page
-from flask import Flask, render_template,request
+from flask import Flask, url_for
 from models import db, BlogPost
-from views import home,post,create_post,about
+from views import details,post,create_post,about
+from werkzeug.routing import Rule
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -12,17 +14,21 @@ db.init_app(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
-# creating a decorator for the hone page mentioned in views.py
-app.route('/')(home)
 
-# creating a decorator for the about page mentioned in views.py
-app.route('/about')(about)
+# route for the details page
+app.add_url_rule(rule='/details', view_func=details, methods=['GET'])
 
-# creating a decorator for the view blog function mentioned in views.py
-app.route('/post/<post_title>')(post)
+# route for the about page
+app.add_url_rule(rule='/about', view_func=about, methods=['GET'])
+app.add_url_rule(rule='/',view_func=about, methods=['GET'])
 
-#creating a decorator for the create_post function mentioned in views.py
-app.route('/create_post',methods=['GET', 'POST'])(create_post)
+#route for post page
+app.add_url_rule(rule='/post/<post_title>', view_func=post, methods=['GET'])
+
+#route for create_post page
+app.add_url_rule(rule='/create_post', view_func=create_post, methods=['GET', 'POST'])
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
