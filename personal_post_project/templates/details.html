@@ -1,13 +1,18 @@
-{% extends 'base.html' %}
-
-{% block title %}My Blog{% endblock %}
-
 {% block content %}
   <h1>My Blog</h1>
   <ul>
     {% for post in posts %}
-      <li><a href="{{ url_for('post', post_title=post.title) }}">{{ post.title }}</a></li>
+    <li>
+      {{ post.title }} - {{ post.date_posted.strftime('%Y-%m-%d') }}
+      
+      <form action="{{ url_for('post', post_title=post.title) }}" method="GET" style="display: inline;">
+        <button type="submit" class="btn btn-danger btn-sm">View</button>
+
+      </form>
+      <form action="{{ url_for('delete_post', post_title=post.title) }}" method="GET" style="display: inline;">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </li>
     {% endfor %}
   </ul>
 {% endblock %}
-

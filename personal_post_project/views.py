@@ -24,6 +24,14 @@ def create_post():
         return redirect(url_for('details'))
     return render_template('create_post.html')
 
+# writing a function which deletes a blog post
+def delete_post(post_title):
+    post = BlogPost.query.filter_by(title=post_title).one()
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('details'))
+    
+
 # writing a function for the about page which will have a list of all the blogs
 def about():
     return render_template('about.html')
